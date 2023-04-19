@@ -1,0 +1,414 @@
+{include file="../../../application/admin/view/public/head" /}
+<div class="page-container">
+    <div class="showpic" style="display:none;"><img class="showpic_img" width="120" height="160" referrerPolicy="no-referrer"></div>
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-tab" lay-filter="tb1">
+            <ul class="layui-tab-title">
+                <li class="layui-this" lay-id="config_1">基础设置</li>
+                <li lay-id="config_2">广告设置</li>
+                <li lay-id="config_3">个性设置</li>
+                <li lay-id="config_4">解析设置</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">播放器内核</label>
+                        <div class="layui-input-inline w300" >
+                            <select name="play-type">
+                                <option value="dp" {if condition="$config['play-type'] eq 'dp'"}selected {/if}>DpLayer【使用最广泛的】</option>
+                                <option value="art" {if condition="$config['play-type'] eq 'art'"}selected {/if}>ArtLayer【手机端兼容好】</option>
+                                <option value="ck" {if condition="$config['play-type'] eq 'ck'"}selected {/if}>CkLayer【不支持弹幕】</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline ">选择使用的播放器</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">网站域名</label>
+                        <div class="layui-input-inline w600">
+                            <input type="text" name="host" placeholder="https://{php}echo $_SERVER['HTTP_HOST'];{/php}/" value="{$config['host']}" class="layui-input">
+                        </div>
+                        <div class="layui-input-inline ">必须设置(结尾需带/)</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">播放器LOGO</label>
+                        <div class="layui-input-inline w600">
+                            <input type="text" name="logo" placeholder="播放器logo图片" value="{$config['logo']}" class="layui-input upload-input">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'logo'}}" id="upload1">上传LOGO</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">试看时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="trytime" placeholder="免费试看时间" value="{$config['trytime']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">设置试看时间后需要勾选试看用户组，针对勾选的用户组有效</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">试看用户组</label>
+                        <div class="layui-input-block">
+                            {volist name="userList" id="vo"}
+                            <input type="checkbox" lay-skin="primary" name="try-user[]" value="{$vo.group_name}" title="{$vo.group_name}" {if condition="strpos($config['try-user'],$vo.group_name) !==false"}checked {/if}>
+                            {/volist}
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">等待时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="waittime" placeholder="等等时间" value="{$config['waittime']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">播放器加载页等待时间</div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title">
+                        <legend>弹幕设置</legend>
+                    </fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">弹幕开关</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="danmuon" value="0" title="开启" {if condition="$config['danmuon'] eq 0"}checked {/if}>
+                            <input type="radio" name="danmuon" value="1" title="关闭" {if condition="$config['danmuon'] eq 1"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">输入框显示</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="default" value="1" title="开启" {if condition="$config['default'] eq 1"}checked {/if}>
+                            <input type="radio" name="default" value="0" title="关闭" {if condition="$config['default'] eq 0"}checked {/if}>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">开启后电脑端只在全屏模式下显示弹幕输入框，可配播放器外部调用接口实现从网页中发送控制弹幕</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">发布限制</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="user_danmuon" value=0 title="不限制" {if condition="$config['user_danmuon'] eq 0"}checked {/if}>
+                            <input type="radio" name="user_danmuon" value=1 title="登录后发送弹幕" {if condition="$config['user_danmuon'] eq 1"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据缓存</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="cache" placeholder="弹幕数据缓存时间" value="{$config['cache']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">在请求过多的情况下启用缓存可有效减少服务器压力，缓存时间内新弹幕内容无法显示（0为不启用）</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">发送间隔</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="sendtime" placeholder="间隔时间" value="{$config['sendtime']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">发送弹幕间隔时间，单位秒</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">内容限制</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="chinese" value="0" title="必须全中文" {if condition="$config['chinese'] eq 0"}checked {/if}>
+                            <input type="radio" name="chinese" value="1" title="必须携带中文" {if condition="$config['chinese'] eq 1"}checked {/if}>
+                            <input type="radio" name="chinese" value="2" title="不限制" {if condition="$config['chinese'] eq 2"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">内容长度限制</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="length" placeholder="设置长度" value="{$config['length']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">限制弹幕内容长度，超过长度的弹幕将拒绝发布</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">内容审核</label>
+                        <div class="layui-input-inline w300">
+                            <input type="radio" name="audit" value="0" title="关闭" {if condition="$config['audit'] neq 1"}checked {/if}>
+                            <input type="radio" name="audit" value="1" title="开启" {if condition="$config['audit'] eq 1"}checked {/if}>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">开启后用户发送的弹幕仅自己可看需管理员审核后才会被别人看到</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">禁用关键字</label>
+                        <div class="layui-input-block">
+                            <textarea name="pbgjz" class="layui-textarea"  placeholder="">{$config['pbgjz']}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">发现违规词</label>
+                        <div class="layui-input-inline">
+                            <input type="radio" name="handle" value="0" title="将违规词替换为***" {if condition="$config['handle'] eq 0"}checked {/if}>
+                            <input type="radio" name="handle" value="1" title="禁止入库返回提示" {if condition="$config['handle'] eq 1"}checked {/if}>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">显示广告用户组</label>
+                        <div class="layui-input-block">
+                            {volist name="userList" id="vo"}
+                            <input type="checkbox" lay-skin="primary" name="user[]" value="{$vo.group_name}" title="{$vo.group_name}" {if condition="strpos($config['user'],$vo.group_name) !==false"}checked {/if}>
+                            {/volist}
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告类型</label>
+                        <div class="layui-input-inline w300">
+                            <input type="radio" name="state" value="0" title="图片广告" {if condition="$config['state'] neq 1"}checked {/if}>
+                            <input type="radio" name="state" value="1" title="视频广告" {if condition="$config['state'] eq 1"}checked {/if}>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:lang('admin/system/config/popedom_filter_tip')}</div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title"><legend>图片广告</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="ads[pic][time]" placeholder="图片广告时间" value="{$config['ads']['pic']['time']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">单位/秒</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告图片</label>
+                        <div class="layui-input-inline w600">
+                            <input type="text" name="ads[pic][img]" placeholder="图片广告内容" value="{$config['ads']['pic']['img']}" class="layui-input upload-input">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'ads[pic][img]'}}" id="upload2">上传图片</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告链接</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ads[pic][link]" placeholder="图片广告链接" value="{$config['ads']['pic']['link']}" class="layui-input">
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title"><legend>视频广告</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">视频地址</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ads[vod][time]" placeholder="视频直连地址" value="{$config['ads']['vod']['time']}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告链接</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ads[vod][link]" placeholder="广告链接地址" value="{$config['ads']['vod']['link']}" class="layui-input">
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title"><legend>暂停广告</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告开关</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="ads[pause][state]" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF" {if condition="$config['ads']['pause']['state'] eq 'on'"}checked {/if}>
+                            <div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>Off</em><i></i></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告图片</label>
+                        <div class="layui-input-inline w600">
+                            <input type="text" name="ads[pause][img]" placeholder="图片广告内容" value="{$config['ads']['pause']['img']}" class="layui-input upload-input">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'ads[pause][img]'}}" id="upload3">上传图片</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">广告链接</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ads[pause][link]" placeholder="图片广告链接" value="{$config['ads']['pause']['link']}" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-tab-item">
+                    <fieldset class="layui-elem-field layui-field-title"><legend>视频加载中设置</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">背景图</label>
+                        <div class="layui-input-inline w300">
+                            <input type="radio" name="random" value="0" title="固定背景图" {if condition="$config['random'] neq 1"}checked {/if}>
+                            <input type="radio" name="random" value="1" title="随机背景图" {if condition="$config['random'] eq 1"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">固定背景图</label>
+                        <div class="layui-input-inline w600">
+                            <input type="text" name="gx[pic]" placeholder="图片广告内容" value="{$config['gx']['pic']}" class="layui-input upload-input">
+                        </div>
+                        <div class="layui-input-inline ">
+                            <button type="button" class="layui-btn layui-upload" lay-data="{data:{thumb:0,thumb_class:'gx[pic]'}}" id="upload4">上传图片</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">随机背景图</label>
+                        <div class="layui-input-block">
+                            <textarea name="random_img" class="layui-textarea"  placeholder="">{$config['random_img']}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">加载图片</label>
+                        <div class="layui-input-inline" >
+                            <select class="w150" name="gx[load_icon]">
+                                <option value="0" {if condition="$config['gx']['load_icon'] eq 0"}selected {/if}>默认效果</option>
+                                <option value="1" {if condition="$config['gx']['load_icon'] eq 1"}selected {/if}>卡通人物</option>
+                            </select>
+                        </div>
+                        <label class="layui-form-label">自定义加载图片</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="gx[load_img]" placeholder="图片地址" value="{$config['gx']['load_img']}" class="layui-input w350" >
+                        </div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title"><legend>播放器皮肤设置</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">主题色</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="color" placeholder="颜色代码" value="{$config['color']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">播放器主色调</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">文字颜色</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="gx[load_color]" placeholder="图片广告时间" value="{$config['gx']['load_color']}" class="layui-input w150">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">视频加载中左下角提示文字颜色</div>
+                    </div>
+                    <fieldset class="layui-elem-field layui-field-title"><legend>其他设置</legend></fieldset>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">LOGO位置</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-skin="primary" name="gx[logo]" value="0" title="左上角" {if condition="$config['gx']['logo'] == 0"}checked {/if}>
+                            <input type="radio" lay-skin="primary" name="gx[logo]" value="1" title="右上角" {if condition="$config['gx']['logo'] == 1"}checked {/if}>
+                            <input type="radio" lay-skin="primary" name="gx[logo]" value="2" title="左下角" {if condition="$config['gx']['logo'] == 2"}checked {/if}>
+                            <input type="radio" lay-skin="primary" name="gx[logo]" value="3" title="右下角" {if condition="$config['gx']['logo'] == 3"}checked {/if}>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">跑马灯</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="marquee" placeholder="播放器顶部滚动文字" value="{$config['marquee']}" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">多接口切换</label>
+                        <div class="layui-input-inline w300">
+                            <select class="w150" name="mode">
+                                <option value="0" {if condition="$config['mode']['load_icon'] eq 0"}selected {/if}>友好切换【解析失败用户可自由选择线路】</option>
+                                <option value="1" {if condition="$config['mode']['load_icon'] eq 1"}selected {/if}>自动切换【解析失败后台自动更换解析】</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">秘钥</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="key" placeholder="用来加密资源地址的" value="{$config['key']}" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">iv值</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="iv" placeholder="用来加密资源地址的" value="{$config['iv']}" class="layui-input">
+                        </div>
+                    </div>
+                    <div style="color:indianred">密钥，IV16位字母数字组成，可随意修改</div><br>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">解析回源</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="yuan" placeholder="填写特征码，多个用|分开" value="{$config['yuan']}" class="layui-input">
+                        </div>
+                    </div>
+                    <div style="color:indianred">根据特征码对指定内容不做解析直接返回</div><br>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">json接口</label>
+                        <div class="layui-input-block">
+                            <textarea name="api" cols="" style="height:220px;min-height:50px;" class="layui-textarea"  placeholder="" >{$config.api}</textarea>
+                        </div>
+                        <div class="layui-input-block dp-info">
+                            一行一条json，用$分开，前面部分是支持解析的资源，可以填特征码或苹果cms中的播放器编码，右边部分是json接口及解析配置参数，一共6个参数具体看下面参数说明<br>
+                            1.缓存时间：设置缓存时间后解析出来的m3u8文件会被保存到本地，比如设置0（不缓存）36（缓存36秒，36秒内有解析同一个资源不请求接口直接读取本地缓存）99999（缓存资源永久有效）
+                            <br>
+                            2.请求等待时间：请求接口等待的时间，单位秒（默认15秒）
+                            <br>
+                            3.回应等待时间：接口请求成功开始到接口返回解析结果之间的时间，单位秒（默认30秒）
+                            <br>
+                            4.伪装来路域名：有域名限制的接口可以填写有授权的域名用来伪装授权直接请求接口，不需要伪装填0即可
+                            <br>
+                            5.自动补全tsurl开关：有的ts链接地址补全缓存后无法使用可开启这个选项，0关闭，1开启
+                            <br>
+                            6.补全tsurl部分：自动补全是直接根据m3u8文件路径补全ts链接，有的ts链接前面部分不是m3u8路径的在这里自行设置
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item center">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="formSubmit">{:lang('btn_save')}</button>
+                        <button class="layui-btn layui-btn-warm" type="reset">{:lang('btn_reset')}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{include file="../../../application/admin/view/public/foot" /}
+<script type="text/javascript" src="__STATIC__/js/jquery.cookie.js"></script>
+<script type="text/javascript">
+    layui.use(['form','upload', 'layer'], function(){
+        // 操作对象
+        var element = layui.element
+            ,form = layui.form
+            , layer = layui.layer
+            , upload = layui.upload;
+
+        form.on('radio(cache_type)',function(data){
+            $('.row_cache_server').hide();
+            if(data.value=='memcache' || data.value=='redis' || data.value=='memcached'){
+                $('.row_cache_server').show();
+            }
+        });
+
+        element.on('tab(tb1)', function(){
+            $.cookie('config_tab', this.getAttribute('lay-id'));
+        });
+
+        if( $.cookie('config_tab') !=null ) {
+            element.tabChange('tb1', $.cookie('config_tab'));
+        }
+
+        upload.render({
+            elem: '.layui-upload'
+            ,url: "{:url('upload/upload')}?flag=site"
+            ,method: 'post'
+            ,before: function(input) {
+                layer.msg("{:lang('upload_ing')}", {time:3000000});
+            },done: function(res, index, upload) {
+                var obj = this.item;
+                if (res.code == 0) {
+                    layer.msg(res.msg);
+                    return false;
+                }
+                layer.closeAll();
+                var input = $(obj).parent().parent().find('.upload-input');
+                if ($(obj).attr('lay-type') == 'image') {
+                    input.siblings('img').attr('src', res.data.file).show();
+                }
+                input.val(res.data.file);
+
+                if(res.data.thumb_class !=''){
+                    $('.'+ res.data.thumb_class).val(res.data.thumb[0].file);
+                }
+            }
+        });
+
+        $('.upload-input').hover(function (e){
+            var e = window.event || e;
+            var imgsrc = $(this).val();
+            if(imgsrc.trim()==""){ return; }
+            var left = e.clientX+document.body.scrollLeft+20;
+            var top = e.clientY+document.body.scrollTop+20;
+            $(".showpic").css({left:left,top:top,display:""});
+            if(imgsrc.indexOf('://')<0){ imgsrc = ROOT_PATH + '/' + imgsrc;	} else{ imgsrc = imgsrc.replace('mac:','http:'); }
+            $(".showpic_img").attr("src", imgsrc);
+        },function (e){
+            $(".showpic").css("display","none");
+        });
+
+
+    });
+</script>
+</body>
+</html>

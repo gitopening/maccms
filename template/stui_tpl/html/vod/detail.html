@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {include file="seo/vod_detail"}   
+	{include file="block/include"}
+</head>
+<body>
+	{include file="block/head"}
+    <div class="container">
+        <div class="row">     
+            <div class="col-lg-wide-75 col-xs-1 padding-0">	
+            	<!-- 详细信息-->
+            	<div class="stui-pannel stui-pannel-bg clearfix">
+					<div class="stui-pannel-box">
+						<div class="col-pd clearfix">	
+							<span class="text-muted">当前位置 <i class="icon iconfont icon-more"></i></span>
+							<a href="{$maccms.path}">首页</a> <i class="icon iconfont icon-more"></i>
+							<a href="{:mac_url_type($obj,[],'show')}">{$obj.type.type_name}</a> <i class="icon iconfont icon-more"></i> 
+							<span class="text-muted">《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》</span> 
+						</div>
+						<div class="col-pd clearfix">
+							<div class="stui-content__thumb">									
+								<a class="stui-vodlist__thumb picture v-thumb" href="{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}" title="{$obj.vod_name}">
+									<img class="lazyload" src="{$maccms.path}statics/img/load.gif" data-original="{:mac_url_img($obj.vod_pic)}"/>
+									<span class="play active hidden-xs"></span>
+									<span class="pic-text text-right">{if condition="$obj.vod_remarks neq ''"}{$obj.vod_remarks}{elseif condition="$obj.vod_serial gt 0"}第{$obj.vod_serial}集{else /}已完结{/if}</span>
+								</a>					
+							</div>
+							<div class="stui-content__detail">
+								<h1 class="title"><a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a><span class="score text-red">{$obj.vod_score}</span></h1>	
+								<p class="data">
+									<span class="text-muted">类型：</span>{$obj.vod_class|mac_url_create='class'}
+									<span class="split-line"></span>
+									<span class="text-muted hidden-xs">地区：</span>{$obj.vod_area|mac_url_create='area'}
+									<span class="split-line"></span>
+									<span class="text-muted hidden-xs">年份：</span>{$obj.vod_year|mac_url_create='year'}								
+								</p>
+								<p class="data"><span class="text-muted">主演：</span>{$obj.vod_actor|mac_substring=35|mac_url_create='actor'}</p>
+								<p class="data"><span class="text-muted">导演：</span>{$obj.vod_director|mac_url_create='director'}</p>
+								<p class="data hidden-sm"><span class="text-muted">更新：</span>{$obj.vod_time|date='Y-m-d',###}</p>														
+								<p class="desc hidden-xs">
+									<span class="left text-muted">简介：</span>
+									{$obj.vod_content|mac_filter_html|mac_substring=80}
+									<a href="#desc">详情 <i class="icon iconfont icon-moreunfold"></i></a>
+								</p>							    
+								<div class="play-btn clearfix">
+									<div class="share bdsharebuttonbox hidden-sm hidden-xs pull-right"></div>
+									<a class="btn btn-primary" href="{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}">立即播放</a>
+									{if condition="$maccms.user_status eq 1"}								
+									&nbsp;&nbsp;<a href="javascript:void(0);" class="mac_ulog btn btn-default" data-type="2" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}">收藏</a>
+									{/if}										
+									<!--<span class="bdsharebuttonbox hidden-xs"><a href="javascript:;" class="btn btn-default bds_btn" data-cmd="more">分享</a></span>-->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- end 详细信息-->
+				
+				{include file="vod/playlist"}<!-- 播放地址-->				
+				{include file="vod/desc"}<!-- 剧情简介-->
+				{include file="vod/like"}<!-- 猜你喜欢-->
+				
+				{if condition="$comment.status eq 1"}
+				<div class="stui-pannel stui-pannel-bg clearfix">
+					<div class="stui-pannel-box clearfix">
+						<div class="stui-pannel_bd clearfix">
+							<div class="stui-pannel_hd">
+								<div class="stui-pannel__head active bottom-line clearfix">
+									<h3 class="title">
+										<img src="{$maccms.path}statics/icon/icon_30.png"/>
+										相关采访
+									</h3>						
+								</div>																		
+							</div>
+							<div class="stui-pannel_bd">
+								<div class="mac_comment" data-id="{$obj.vod_id}" data-mid="{$maccms.mid}" ></div>
+<p>1、问：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》什么时候上映时间？</p>
+
+<p>答：这部影片的上映时间是{$obj.vod_pubdate}</p>
+
+<p>2、问：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》{$obj.vod_class}在哪个电视台播出？</p>
+
+<p>答：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》目前只有<a href="https://v.qq.com/" target="_blank" rel="nofollow">腾讯视频</a>、<a href="https://www.iqiyi.com/" target="_blank" rel="nofollow">爱奇艺</a>、<a href="https://www.youku.com/" target="_blank" rel="nofollow">优酷</a>、<a href="{$maccms.http_type}{$maccms.site_url}" target="_blank">{$maccms.site_name}</a>等线上播出。，而且没有在电视上播出。</p>
+
+<p>3、问：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》演员表</p>
+
+<p>答：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》是由{$obj.vod_actor}领衔主演的 {$obj.vod_class}剧。 {$obj.vod_area} 　{$obj.vod_pubdate} 。该剧于{$obj.vod_pubdate}在<a href="https://v.qq.com/" target="_blank" rel="nofollow">腾讯视频</a>、<a href="https://www.iqiyi.com/" target="_blank" rel="nofollow">爱奇艺</a>、<a href="{$maccms.http_type}{$maccms.site_url}" target="_blank">{$maccms.site_name}</a>、<a href="https://www.youku.com/" target="_blank" rel="nofollow">优酷</a>、等平台同步播出。</p>
+
+<p>4、问：哪个平台可以免费看《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》全集</p>
+
+<p>答：免vip在线观看地址<a href="{$maccms.http_type}{$maccms.site_url}{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}">{$maccms.http_type}{$maccms.site_url}{:mac_url_vod_play($obj,['sid'=>1,'nid'=>1])}</a></p>
+
+<p>5、问：手机版免费在线点播《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》有哪些网站？</p>
+
+<p>答：<a href="http://v.hao123.baidu.com/" target="_blank" rel="nofollow">hao123影视</a>、<a href="https://v.xiaodutv.com/" target="_blank" rel="nofollow">百度视频</a>、<a href="{$maccms.http_type}{$maccms.site_url}" target="_blank">{$maccms.site_name}</a>、<a href="https://www.pptv.com/" target="_blank" rel="nofollow">PPTV</a></p>
+
+<p>6、问：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》评价怎么样？</p>
+
+<p><a href="http://www.mtime.com/" target="_blank" rel="nofollow">Mtime时光网</a>网友评价：我一直认为所谓的电影比小说更生动，基于虚拟和幻想，但它们都是现实的虚幻影子</p>
+
+<p><a href="https://www.diudou.com/" target="_blank" rel="nofollow">丢豆网</a>网友评论：{$obj.vod_director}导演的作品有欢笑、泪水、喜悦和悲伤..，虚拟世界中的感情是丰富多彩的，不同于我们在现实中不开心的时候一直玩的感觉。当我们看完它，我们会感到更舒服。</p>
+
+<p><a href="https://www.douban.com/" target="_blank" rel="nofollow">豆瓣</a>电影网友：《<a href="{:mac_url_vod_play($obj,[‘sid’=>1,‘nid’=>1])}">{$obj.vod_name}</a>》与其他作品不同，没有紧迫感、虚浮的情节和凌乱的画面不断地教导我们，不像老师和家长的教导（为了遵守这里，我省略了冗长的词）。当我们看电影、电视剧或综艺节目时，我们经常融入其中，无意识地理解这些似乎不容易被我们发现和理解的真相。此外，当你看视频时，你会发现这是现实中更近教学的教学！</p>
+								
+								
+<!--
+								<script>
+							        $(function(){
+							            MAC.Comment.Login = {$comment.login};
+							            MAC.Comment.Verify = {$comment.verify};
+							            MAC.Comment.Init();
+							            MAC.Comment.Show(1);
+							        });
+							    </script>
+-->
+							</div>
+						</div>
+					</div>					
+				</div>		
+				{/if}
+			</div>				
+			<div class="col-lg-wide-25 col-xs-1 stui-pannel-side hidden-sm hidden-xs">	
+				{include file="vod/code"}<!-- 扫码-->
+				{include file="vod/hot"}<!-- 热播-->				
+			</div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    	var playli = $(".stui-content__playlist:first li").length;
+    	if(playcolumn>1){  		  		
+    		if(playli>5){
+    			$(".stui-content__playlist").addClass("column"+playcolumn);
+    		}   		
+    	}
+    	if(playli>30){
+			$(".stui-content__playlist").css({"max-height":" 300px","overflow-y":"scroll"});
+		} 
+    </script>
+	<span class="mac_hits hits hide" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}{$obj.art_id}{$obj.topic_id}" data-type="hits"></span>
+    <span class="mac_ulog_set hide" data-type="4" data-mid="{$maccms.mid}" data-id="{$obj.vod_id}" data-sid="{$param.sid}" data-nid="{$param.nid}"></span>
+	{include file="block/foot"}
+</body>
+</html>
