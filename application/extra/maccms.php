@@ -17,11 +17,11 @@ return array (
   ),
   'site' => 
   array (
-    'site_name' => '黑牛电影',
+    'site_name' => '七夕电影',
     'site_url' => 'hnshr.com',
     'site_wapurl' => 'hnshr.com',
-    'site_keywords' => '黑牛电影,在线影院,在线电影网',
-    'site_description' => '黑牛电影是一家专门提供最新电影在线观看、剧情简介、影评介绍的影视聚合网站,黑牛电影能推荐给大家各类好看的电影作品和精彩的剧情解析,黑牛电影提供各类热门电影、大片、电视剧在线看的网站',
+    'site_keywords' => '七夕电影,在线影院,在线电影网',
+    'site_description' => '七夕电影是一家专门提供最新电影在线观看、剧情简介、影评介绍的影视聚合网站,七夕电影能推荐给大家各类好看的电影作品和精彩的剧情解析,七夕电影提供各类热门电影、大片、电视剧在线看的网站',
     'site_icp' => '豫ICP备11022223号-2',
     'site_qq' => '123',
     'site_email' => '123@gmail.com',
